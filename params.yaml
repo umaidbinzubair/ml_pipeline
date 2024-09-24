@@ -1,0 +1,15 @@
+# model_type: yolov8s.pt
+model_type: yolov8s-seg.pt #default model type or saved model
+data: 'data.yaml'
+pretrained: True
+seed: 0
+imgsz: 640 
+batch: 8 
+epochs: 100
+patience: 10
+device: mps # other choices=[cpu, 0, mps]
+optimizer: Adam # other choices=['SGD', 'Adam', 'AdamW', 'RMSProp']
+lr0: 0.001  # learning rate 
+name: 'model' # experiment name
+resume: False
+format: torchsript
