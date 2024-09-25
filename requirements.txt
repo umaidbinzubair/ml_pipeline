@@ -1,4 +1,4 @@
-python-dotenv==1.0.0
+python-dotenv
 dvc==2.51.0
 mlflow==2.2.2
 ultralytics==8.0.58
