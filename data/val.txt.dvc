@@ -1,0 +1,4 @@
+outs:
+- md5: dd32a3d05405c8e57ba5138c278e2032
+  size: 4959
+  path: val.txt
