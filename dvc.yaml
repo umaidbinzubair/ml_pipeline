@@ -1,0 +1,15 @@
+stages:
+  train:
+    cmd: python src/train.py
+    deps:
+      - data/
+      - src/train.py
+      - src/utils.py
+      - params.yaml
+    outs:
+      - models/model.pt
+      - reports/train_params.yaml:
+          cache: false
+    metrics:
+      - reports/train_metrics.csv:
+          cache: false

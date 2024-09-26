@@ -54,7 +54,7 @@ if __name__ == '__main__':
         mlflow.log_param('learning_rate', params['lr0'])
 
         # save model
-        save_model(experiment_name=params['name'], format=params['format']) 
+        save_model(experiment_name=params['name']) 
 
         # save metrics csv file and training params 
         save_metrics_and_params(experiment_name=params['name'])
