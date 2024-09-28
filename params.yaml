@@ -1,15 +1,23 @@
-# model_type: yolov8s.pt
-model_type: yolov8s-seg.pt #default model type or saved model
+experiment:
+  experiment_name: 'wound segmentation' # experiment name
+  name: 'yolov8s' # experiment name
+  model_type: yolov8s-seg.pt
+
 data: 'data.yaml'
-pretrained: True
-seed: 0
-imgsz: 640 
-batch: 8 
-epochs: 1
-patience: 10
-device: mps # other choices=[cpu, 0, mps]
-optimizer: Adam # other choices=['SGD', 'Adam', 'AdamW', 'RMSProp']
-lr0: 0.001  # learning rate 
-name: 'wound_segment_yolov8s' # experiment name
+
+parameters:
+  pretrained: True
+  seed: 0
+  imgsz: 640 
+  batch: 8 
+  epochs: 1
+  patience: 10
+  device: mps # other choices=[cpu, 0, mps]
+  optimizer: Adam # other choices=['SGD', 'Adam', 'AdamW', 'RMSProp']
+  lr0: 0.001  # learning rate 
+
 resume: False
+weights: '' # other options=['', 'weights/last.pt', 'weights/best.pt']
+
 format: torchsript
+save: False
