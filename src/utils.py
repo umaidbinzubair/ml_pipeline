@@ -1,16 +1,22 @@
 import os
 import shutil
+import yaml
 from pathlib import Path
 
 
 ROOT_DIR = Path(__file__).resolve().parents[1]  # root directory absolute path
+
+def read_config(path: str) -> dict:
+    with open (path) as f:
+        config = yaml.safe_load(f)
+    return config
 
 
 def save_model(experiment_name: str):
     """ saves the weights of trained model to the models directory """ 
     if os.path.isdir('runs'):
         model_weights = experiment_name + "/weights/best.pt"
-        path_model_weights = os.path.join(ROOT_DIR, "runs/detect", model_weights)
+        path_model_weights = os.path.join(ROOT_DIR, "runs/segment", model_weights)
 
         shutil.copy(src=path_model_weights, dst=f'{ROOT_DIR}/models/model.pt')
 

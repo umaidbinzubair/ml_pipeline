@@ -1,74 +1,36 @@
-import os
-from pathlib import Path
 
-import mlflow
-import yaml
-from dotenv import load_dotenv
 from ultralytics import YOLO
+class Trainer:
+    def __init__(self, config):
+        self.param = config
+        self.DEVICE = self.params['device'] if self.params['device'] else 'cpu'
 
-from utils import save_metrics_and_params, save_model
+    def train(self, epoch):
+        params = self.param
 
+        if params['weights']:
+            model = YOLO(params['weights'])
+        else:
+            model = YOLO(params['model_type'])
 
-load_dotenv()
-DEVICE = os.getenv('DEVICE') if os.getenv('DEVICE') else 'cpu'
-MLFLOW_TRACKING_URI=os.getenv('MLFLOW_TRACKING_URI')
-
-root_dir = Path(__file__).resolve().parents[1]  # root directory absolute path
-data_dir = os.path.join(root_dir, "data/")
-data_yaml_path = "data.yaml"
-metrics_path = os.path.join(root_dir, 'reports/train_metrics.json')
-
-
-if __name__ == '__main__':
-
-    # load the configuration file 
-    with open(r"params.yaml") as f:
-        params = yaml.safe_load(f)
-
-    # set the tracking uri 
-    mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
-
-    # start mlflow experiment 
-    with mlflow.start_run(run_name=params['name']):
-        # load a pre-trained model 
-        pre_trained_model = YOLO(params['model_type'])
-
-        # train 
-        model = pre_trained_model.train(
-            data=data_yaml_path,
-            imgsz=params['imgsz'],
-            batch=params['batch'],
-            epochs=params['epochs'],
-            optimizer=params['optimizer'],
-            lr0=params['lr0'],
-            seed=params['seed'],
-            pretrained=params['pretrained'],
-            name=params['name'],
-            device = DEVICE
+        if params['resume']:
+            results=model.train(resume=True)
+        else:
+            results = model.train(
+                data=params['data'],
+                imgsz=params['parameters']['imgsz'],
+                batch=params['parameters']['batch'],
+                epochs=params['parameters']['epochs'],
+                optimizer=params['parameters']['optimizer'],
+                lr0=params['parameters']['lr0'],
+                seed=params['parameters']['seed'],
+                pretrained=params['parameters']['pretrained'],
+                name=params['parameters']['name'],
+                device = self.DEVICE,
+                save = params['parameters']['save']
         )
 
-        # log params with mlflow
-        mlflow.log_param('model_type', params['model_type'])
-        mlflow.log_param('epochs',params['epochs'])
-        mlflow.log_param('optimizer', params['optimizer'])
-        mlflow.log_param('learning_rate', params['lr0'])
-
-        # save model
-        save_model(experiment_name=params['name']) 
-
-        # save metrics csv file and training params 
-        save_metrics_and_params(experiment_name=params['name'])
-
-
-
-         
-
-
-
-
-
-
-
-
-
-
+        if params['format'] == 'torchscript':
+            model.export(format='torchscript')
+        
+        return results
