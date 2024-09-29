@@ -1,9 +1,9 @@
 stages:
   train:
-    cmd: python src/train.py
+    cmd: python src/main.py
     deps:
       - data/
-      - src/train.py
+      - src/main.py
       - src/utils.py
       - params.yaml
     outs:
