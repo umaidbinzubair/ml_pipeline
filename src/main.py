@@ -4,7 +4,7 @@ from pathlib import Path
 import mlflow
 from dotenv import load_dotenv
 
-from utils import read_config,yolov8nms
+from utils import read_config, yolov8nms
 from train import Trainer
 
 from ultralytics import settings
@@ -36,6 +36,7 @@ if __name__ == '__main__':
 
         if params['format'] == 'torchscript':
             path = results.save_dir/'weights'
+            os.environ['WEIGHTS_PATH'] = str(path)
             modelnms=yolov8nms(str(path/'best.torchscript'))
             modelnms.save(str(path/'best.nms_torchscript'))
         
