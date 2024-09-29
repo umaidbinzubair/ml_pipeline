@@ -2,6 +2,8 @@ import os
 import shutil
 import yaml
 from pathlib import Path
+from yolov8_nms_torchscript import Yolov8NMS
+import torch
 
 
 ROOT_DIR = Path(__file__).resolve().parents[1]  # root directory absolute path
@@ -10,6 +12,11 @@ def read_config(path: str) -> dict:
     with open (path) as f:
         config = yaml.safe_load(f)
     return config
+
+def yolov8nms(path:str)-> None:
+    model = torch.jit.load(path)
+    model = Yolov8NMS(model)
+    return model   
 
 
 def save_model(experiment_name: str):
@@ -33,5 +40,4 @@ def save_metrics_and_params(experiment_name: str) -> None:
         shutil.copy(src=f'{path_metrics}/confusion_matrix.png', dst=f'{ROOT_DIR}/reports/train_confusion_matrix.png')
 
         # save training params
-        shutil.copy(src=f'{path_metrics}/args.yaml', dst=f'{ROOT_DIR}/reports/train_params.yaml')
-    
+        shutil.copy(src=f'{path_metrics}/args.yaml', dst=f'{ROOT_DIR}/reports/train_params.yaml') 

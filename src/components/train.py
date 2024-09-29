@@ -1,17 +1,19 @@
 
 from ultralytics import YOLO
+import torch
 class Trainer:
     def __init__(self, config):
-        self.param = config
-        self.DEVICE = self.params['device'] if self.params['device'] else 'cpu'
+        self.params = config
+        self.DEVICE = self.params['parameters']['device'] if self.params['parameters']['device']\
+        else ('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-    def train(self, epoch):
-        params = self.param
+    def train(self):
+        params = self.params
 
         if params['weights']:
             model = YOLO(params['weights'])
         else:
-            model = YOLO(params['model_type'])
+            model = YOLO(params['experiment']['model_type'])
 
         if params['resume']:
             results=model.train(resume=True)
@@ -25,7 +27,6 @@ class Trainer:
                 lr0=params['parameters']['lr0'],
                 seed=params['parameters']['seed'],
                 pretrained=params['parameters']['pretrained'],
-                name=params['parameters']['name'],
                 device = self.DEVICE,
                 save = params['parameters']['save']
         )

@@ -1,23 +1,23 @@
-experiment:
+Train:
   experiment_name: 'wound segmentation' # experiment name
-  name: 'yolov8s' # experiment name
-  model_type: yolov8s-seg.pt
+  name: 'yolov8n_v2' # experiment name
+  model_type: yolov8n-seg.pt
+  data: 'data.yaml'
+  parameters:
+    pretrained: True
+    seed: 0
+    imgsz: 640 
+    batch: 8 
+    epochs: 1
+    patience: 10
+    device: mps # other choices=[cpu, 0, mps]
+    optimizer: Adam # other choices=['SGD', 'Adam', 'AdamW', 'RMSProp']
+    lr0: 0.001  # learning rate
+    save: True
+    verbose: True 
+    resume: False
+      weights: '' # other options=['', 'weights/last.pt', 'weights/best.pt']
+    format: torchscript
 
-data: 'data.yaml'
-
-parameters:
-  pretrained: True
-  seed: 0
-  imgsz: 640 
-  batch: 8 
-  epochs: 1
-  patience: 10
-  device: mps # other choices=[cpu, 0, mps]
-  optimizer: Adam # other choices=['SGD', 'Adam', 'AdamW', 'RMSProp']
-  lr0: 0.001  # learning rate 
-
-resume: False
-weights: '' # other options=['', 'weights/last.pt', 'weights/best.pt']
-
-format: torchsript
-save: False
+predict:
+  model_path: 'weights/best.pt'
